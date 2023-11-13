@@ -1,0 +1,23 @@
+{
+    "development": {
+        "username": "postgres",
+        "password": "N1357=Dt",
+        "database": "online_store",
+        "host": "localhost",
+        "dialect": "postgres"
+    },
+    "test": {
+        "username": "postgres",
+        "password": "N1357=Dt",
+        "database": "online_store",
+        "host": "localhost",
+        "dialect": "postgres"
+    },
+    "production": {
+        "username": "postgres",
+        "password": "N1357=Dt",
+        "database": "online_store",
+        "host": "localhost",
+        "dialect": "postgres"
+    }
+}
