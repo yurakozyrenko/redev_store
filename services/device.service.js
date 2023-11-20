@@ -2,188 +2,39 @@ const { Device, Category } = require('../models/models');
 const { Op } = require('sequelize');
 
 class DeviceInfosService {
-
     // Get All devices
     async getAllDevices({
         categoryId,
         minPrice,
         maxPrice,
-        sortPrice,
-        sortDate,
+        sort,
+        order,
         limit,
         offset,
     }) {
-        // const candidate = await Category.findOne({ where: { id: categoryId } });
-        // if (!candidate) {
-        //     throw new Error('Category was not found');
-        // }
-
         let devices;
-        if (!categoryId && !sortPrice && !sortDate) {
-            devices = await Device.findAndCountAll({
-                where: {
-                    price: { [Op.between]: [minPrice, maxPrice] },
-                },
-                limit,
-                offset,
-            });
-        }
-        if (categoryId && !sortPrice && !sortDate) {
+        if (categoryId) {
             devices = await Device.findAndCountAll({
                 where: {
                     categoryId,
                     price: { [Op.between]: [minPrice, maxPrice] },
                 },
+                order: [[`${sort}`, `${order}`]],
                 limit,
                 offset,
             });
         }
 
-        if (!categoryId && sortPrice == 2 && !sortDate) {
+        if (!categoryId) {
             devices = await Device.findAndCountAll({
                 where: {
                     price: { [Op.between]: [minPrice, maxPrice] },
                 },
-                order: [['price', 'DESC']],
+                order: [[`${sort}`, `${order}`]],
                 limit,
                 offset,
             });
         }
-
-        if (!categoryId && sortPrice == 1 && !sortDate) {
-            devices = await Device.findAndCountAll({
-                where: {
-                    price: { [Op.between]: [minPrice, maxPrice] },
-                },
-                order: ['price'],
-                limit,
-                offset,
-            });
-        }
-
-        if (categoryId && sortPrice == 2 && !sortDate) {
-            devices = await Device.findAndCountAll({
-                where: {
-                    categoryId,
-                    price: { [Op.between]: [minPrice, maxPrice] },
-                },
-                order: [['price', 'DESC']],
-                limit,
-                offset,
-            });
-        }
-        if (categoryId && sortPrice == 1 && !sortDate) {
-            devices = await Device.findAndCountAll({
-                where: {
-                    categoryId,
-                    price: { [Op.between]: [minPrice, maxPrice] },
-                },
-                order: ['price'],
-                limit,
-                offset,
-            });
-        }
-
-        if (!categoryId && sortPrice == 2 && sortDate == 2) {
-            devices = await Device.findAndCountAll({
-                where: {
-                    price: { [Op.between]: [minPrice, maxPrice] },
-                },
-                order: [['price', 'DESC']],
-                order: [['createdAt', 'DESC']],
-                limit,
-                offset,
-            });
-        }
-
-        if (!categoryId && sortPrice == 2 && sortDate == 1) {
-            devices = await Device.findAndCountAll({
-                where: {
-                    price: { [Op.between]: [minPrice, maxPrice] },
-                },
-                order: [['price', 'DESC']],
-                order: ['createdAt'],
-                limit,
-                offset,
-            });
-        }
-
-        if (!categoryId && sortPrice == 1 && sortDate == 2) {
-            devices = await Device.findAndCountAll({
-                where: {
-                    price: { [Op.between]: [minPrice, maxPrice] },
-                },
-                order: ['price'],
-                order: [['createdAt', 'DESC']],
-                limit,
-                offset,
-            });
-        }
-
-        if (!categoryId && sortPrice == 1 && sortDate == 1) {
-            devices = await Device.findAndCountAll({
-                where: {
-                    price: { [Op.between]: [minPrice, maxPrice] },
-                },
-                order: ['price'],
-                order: ['createdAt'],
-                limit,
-                offset,
-            });
-        }
-
-        if (categoryId && sortPrice == 2 && sortDate == 2) {
-            devices = await Device.findAndCountAll({
-                where: {
-                    categoryId,
-                    price: { [Op.between]: [minPrice, maxPrice] },
-                },
-                order: [['price', 'DESC']],
-                order: [['createdAt', 'DESC']],
-                limit,
-                offset,
-            });
-        }
-
-        if (categoryId && sortPrice == 2 && sortDate == 1) {
-            devices = await Device.findAndCountAll({
-                where: {
-                    categoryId,
-                    price: { [Op.between]: [minPrice, maxPrice] },
-                },
-                order: [['price', 'DESC']],
-                order: ['createdAt'],
-                limit,
-                offset,
-            });
-        }
-
-        if (categoryId && sortPrice == 1 && sortDate == 2) {
-            devices = await Device.findAndCountAll({
-                where: {
-                    categoryId,
-                    price: { [Op.between]: [minPrice, maxPrice] },
-                },
-                order: ['price'],
-                order: [['createdAt', 'DESC']],
-                limit,
-                offset,
-            });
-        }
-
-        if (categoryId && sortPrice == 1 && sortDate == 1) {
-            devices = await Device.findAndCountAll({
-                where: {
-                    categoryId,
-                    price: { [Op.between]: [minPrice, maxPrice] },
-                },
-                order: ['price'],
-                order: ['createdAt'],
-                limit,
-                offset,
-            });
-        }
-
         return devices;
     }
 
@@ -193,32 +44,33 @@ class DeviceInfosService {
             where: { id },
             include: [{ model: Category }],
         });
-        if (!data) {
-            throw new Error('Device was not found');
-        }
         return data;
     }
 
     // добавление нового товара в базу данных
-    async createDevice({ name, price, categoryId, img: fileName }) {
-        const candidate = await Category.findOne({ where: categoryId });
-        if (!candidate) {
-            throw new Error('Category was not found');
-        }
+    async createDevice({ name, price, categoryId, quantity, description }) {
         const newDevice = await Device.create({
             name,
             price,
             categoryId,
-            // img: fileName,
+            quantity,
+            description,
         });
         return newDevice;
     }
 
+    // удаление товара из базы данных
     async deleteOneDevice({ id }) {
         const result = await Device.destroy({ where: { id } });
-        if (!result) {
-            throw new Error('Device was not found');
-        }
+        return result;
+    }
+
+    // Обновить товар из базы данных
+    async updateOneDevice({ name, price, categoryId, quantity, id }) {
+        const result = await Device.update(
+            { name, price, categoryId, quantity },
+            { where: { id } }
+        );
         return result;
     }
 }

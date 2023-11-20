@@ -1,11 +1,15 @@
 const CategoriesService = require('../services/category.service');
 const ApiError = require('../error/ApiError');
+const { validationResult } = require('express-validator');
 
 class CategoryController {
-    
-//Создать новую категорию товаров
+    //Создать новую категорию товаров
     async create(req, res, next) {
         try {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() });
+            }
             const { name } = req.body;
             const category = await CategoriesService.createCategory({
                 name,
@@ -16,12 +20,10 @@ class CategoryController {
         }
     }
 
-//Get all categories
+    //Get all categories
     async getAll(req, res) {
-        let { limit, page } = req.query;
-        page = page || 1;
-        limit = limit || 6;
-        let offset = page * limit - limit;
+        const { limit = 4, page = 1 } = req.query;
+        const offset = page * limit - limit;
         const categories = await CategoriesService.getAllCategories({
             limit,
             offset,
@@ -29,14 +31,14 @@ class CategoryController {
         return res.json(categories);
     }
 
-    async delete(req, res) {
-        const { id } = req.params;
-        const result = await CategoriesService.deleteOneCategory({ id });
-        if (!result) {
-            return res.json('Не найден');
-        }
-        return res.json('Удалено');
-    }
+    // async delete(req, res) {
+    //     const { id } = req.params;
+    //     const result = await CategoriesService.deleteOneCategory({ id });
+    //     if (!result) {
+    //         return res.json('Не найден');
+    //     }
+    //     return res.json('Удалено');
+    // }
 }
 
 module.exports = new CategoryController();

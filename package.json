@@ -1,11 +1,11 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "",
   "main": "server.js",
   "scripts": {
     "dev": "nodemon",
-    "fake-data": "npx sequelize-cli db:seed:all"
+    "fake-data": "npx sequelize-cli db:seed:all",
+    "start": "node server.js"
   },
   "author": "",
   "license": "ISC",
@@ -15,6 +15,7 @@
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "express-fileupload": "^1.4.1",
+    "express-validator": "^7.0.1",
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.11.3",
     "pg-hstore": "^2.3.4",
@@ -26,5 +27,6 @@
   "devDependencies": {
     "nodemon": "^3.0.1",
     "sequelize-cli": "^6.6.1"
-  }
+  },
+  "description": ""
 }

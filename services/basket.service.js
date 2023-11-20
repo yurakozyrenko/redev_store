@@ -1,9 +1,9 @@
-const { Basket, Device, User } = require('../models/models');
+const { Device, Basket } = require('../models/models');
 
 class BasketsService {
     // Получить корзину товаров
     async getBasket({ userId }) {
-        const data = await Basket.findAndCountAll({
+        const data = await Basket.findOne({
             where: { userId },
             include: Device,
         });

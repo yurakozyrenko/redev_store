@@ -1,22 +1,16 @@
 const { UserProfile, User } = require('../models/models');
 
 class UserProfileService {
-
     // Получить профиль пользователя
     async getUserProfile({ userId }) {
         const userProfiles = await UserProfile.findOne({
             where: { userId },
-            include: [{ model: User }]
+            include: [{ model: User }],
         });
         return userProfiles;
     }
 
-    async getOneUserProfile({ id }) {
-        const userProfile = await UserProfile.findOne({ where: { id } });
-        return userProfile;
-    }
-
-    // Создаем профиль пользователя
+    // Создать профиль пользователя
     async createUserProfile({ name, adress, phone, userId }) {
         const userProfile = await UserProfile.create({
             name,
@@ -27,7 +21,17 @@ class UserProfileService {
         return userProfile;
     }
 
-    async deleteOneDevice({ id }) {
+    // Обновить профиль пользователя
+    async updateUserProfile({ name, adress, phone, userId }) {
+        const userProfile = await UserProfile.update(
+            { name, adress, phone },
+            { where: { userId } }
+        );
+        return userProfile;
+    }
+
+    // Удалить профиль пользователя
+    async deleteUserProfile({ id }) {
         const result = await Device.destroy({ where: { id } });
         return result;
     }

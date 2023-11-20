@@ -10,6 +10,8 @@ module.exports = {
                 createdAt: new Date(),
                 updatedAt: new Date(),
                 categoryId: 1,
+                quantity: 4,
+                description: 'Very good'
             },
             {
                 name: 'AtlantXT-1',
@@ -18,6 +20,8 @@ module.exports = {
                 createdAt: new Date(),
                 updatedAt: new Date(),
                 categoryId: 2,
+                quantity: 2,
+                description: 'Very good'
             },
             {
                 name: 'Витязь3000',
@@ -26,6 +30,8 @@ module.exports = {
                 createdAt: new Date(),
                 updatedAt: new Date(),
                 categoryId: 1,
+                quantity: 3,
+                description: 'Very good'
             },
             {
                 name: 'Panasonic22',
@@ -34,6 +40,8 @@ module.exports = {
                 createdAt: new Date(),
                 updatedAt: new Date(),
                 categoryId: 4,
+                quantity: 6,
+                description: 'Very good'
             },
             {
                 name: 'Iphone5',
@@ -42,6 +50,8 @@ module.exports = {
                 createdAt: new Date(),
                 updatedAt: new Date(),
                 categoryId: 5,
+                quantity: 1,
+                description: 'Very good'
             },
             {
                 name: 'Iphone6',
@@ -50,6 +60,8 @@ module.exports = {
                 createdAt: new Date(),
                 updatedAt: new Date(),
                 categoryId: 5,
+                quantity: 1,
+                description: 'Very good'
             },
             {
                 name: 'Iphone7',
@@ -58,6 +70,8 @@ module.exports = {
                 createdAt: new Date(),
                 updatedAt: new Date(),
                 categoryId: 5,
+                quantity: 2,
+                description: 'Very good'
             },
         ]);
     },

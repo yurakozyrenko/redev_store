@@ -1,5 +1,4 @@
-const { User} = require('../models/models');
-const { Basket } = require('../models/models');
+const { User, Basket } = require('../models/models');
 
 class UsersService {
     // Получить пользователя

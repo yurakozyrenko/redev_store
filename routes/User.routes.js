@@ -1,5 +1,11 @@
 const Router = require('express');
 const router = new Router();
+const { checkSchema } = require('express-validator');
+const {
+    registerSchema,
+    nameSchema,
+    userProfileSchema,
+} = require('../helpers/validation');
 const UserController = require('../controllers/userController');
 const authMiddleware = require('../middleware/authMiddleware');
 
@@ -45,7 +51,7 @@ const authMiddleware = require('../middleware/authMiddleware');
  *              description: Some server err
  */
 // авторизация пользователя
-router.post('/login', UserController.login);
+router.post('/login', checkSchema(registerSchema), UserController.login);
 
 /**
  * @swagger
@@ -71,9 +77,13 @@ router.post('/login', UserController.login);
  *              description: Some server err
  */
 //Регистрация пользователя
-router.post('/registration', UserController.registration);
+router.post(
+    '/registration',
+    checkSchema(registerSchema),
+    UserController.registration
+);
 
-router.get('/auth', authMiddleware, UserController.check);
+// router.get('/auth', authMiddleware, UserController.check);
 
 /**
  * @swagger
@@ -100,8 +110,43 @@ router.get('/auth', authMiddleware, UserController.check);
  *          500:
  *              description: Some server err
  */
-//Обновить информацию о пользователе
-router.post('/userProfile', authMiddleware, UserController.createUserProfile);
+//Создать информацию о пользователе
+router.post(
+    '/userProfile',
+    checkSchema(nameSchema),
+    checkSchema(userProfileSchema),
+    authMiddleware,
+    UserController.createUserProfile
+);
+
+/**
+ * @swagger
+ * /api/user/userProfile:
+ *  patch:
+ *      security:
+ *      - bearerAuth: []
+ *      summary: Update information user
+ *      tags: [User]
+ *      requestBody:
+ *          required: true
+ *          description: Update information user
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                     $ref: '#/components/schemas/UserProfileItem'
+ *      responses:
+ *          200:
+ *              description: The user was successfully registration
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/UserProfileItem'
+ *          500:
+ *              description: Some server err
+ */
+
+//Редактировать информацию о пользователе
+router.patch('/userProfile', authMiddleware, UserController.updateUserProfile);
 
 /**
  * @swagger
@@ -117,7 +162,7 @@ router.post('/userProfile', authMiddleware, UserController.createUserProfile);
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/components/schemas/UserProfile'
+ *                          $ref: '#/components/schemas/UserProfileItem'
  *          500:
  *              description: Some server err
  */

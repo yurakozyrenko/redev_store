@@ -2,9 +2,9 @@ const { Order, Device, Status } = require('../models/models');
 
 class OrdersService {
     //История заказов пользователя
-    async getAllOrders({ limit, offset, userId }) {
+    async getAllOrders({ limit, offset, userId, statusId = 4 }) {
         const orders = await Order.findAndCountAll({
-            where: { userId },
+            where: { userId, statusId },
             include: Device,
             limit,
             offset,
@@ -12,7 +12,7 @@ class OrdersService {
         return orders;
     }
 
-    // Просмотреть заказ пользователя по id
+    // Получить заказ пользователя по id
     async getOneOrderById({ id, userId }) {
         const data = await Order.findOne({
             where: { id, userId },
@@ -20,13 +20,20 @@ class OrdersService {
         });
         return data;
     }
-    
+
     // Создать заказ пользователя
-    async createOrder({ userId }) {
-        const newOrder = await Order.create({
-            userId,
-        });
+    async createOrder({ userId, statusId = 1 }) {
+        const newOrder = await Order.create({ userId, statusId });
         return newOrder;
+    }
+
+    // Оплатить заказ пользователя
+    async updateOneOrder({ id, userId, statusId = 2 }) {
+        const updateOrder = await Order.update(
+            { statusId },
+            { where: { userId, id } }
+        );
+        return updateOrder;
     }
 
     async deleteOneDevice({ id }) {

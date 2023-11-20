@@ -1,5 +1,7 @@
 const Router = require('express');
 const router = new Router();
+const { checkSchema } = require('express-validator');
+const { nameSchema } = require('../helpers/validation');
 const CategoryController = require('../controllers/categoryController');
 const checkRole = require('../middleware/checkRoleMiddleware');
 
@@ -75,7 +77,12 @@ const checkRole = require('../middleware/checkRoleMiddleware');
  *              description: Some server err
  */
 //Создать новую категорию товаров
-router.post('/', checkRole('ADMIN'), CategoryController.create);
+router.post(
+    '/',
+    checkSchema(nameSchema),
+    // checkRole('ADMIN'),
+    CategoryController.create
+);
 
 /**
  * @swagger
@@ -86,6 +93,15 @@ router.post('/', checkRole('ADMIN'), CategoryController.create);
  *      summary: Get all categories
  *      tags: [Categories]
  *      description: Returns categories array
+ *      parameters:
+ *        - in: query
+ *          name: page
+ *          schema:
+ *            type: number
+ *        - in: query
+ *          name: limit
+ *          schema:
+ *            type: integer
  *      responses:
  *          200:
  *              description: Success response
@@ -115,6 +131,6 @@ router.post('/', checkRole('ADMIN'), CategoryController.create);
 //Получить все категории товаров
 router.get('/', CategoryController.getAll);
 
-router.delete('/:id', checkRole('ADMIN'), CategoryController.delete);
+// router.delete('/:id', checkRole('ADMIN'), CategoryController.delete);
 
 module.exports = router;

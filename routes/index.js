@@ -37,6 +37,7 @@ const router = new Router();
  *          - name
  *          - price
  *          - categoryId
+ *          - quantity
  *        properties:
  *          name:
  *            type: string
@@ -48,10 +49,10 @@ const router = new Router();
  *            type: integer
  *            description: id
  *        example:
- *            id: 1
  *            name: Sumsung123
  *            price: 200
  *            categoryId: 1
+ *            quantity: 1
  */
 
 /**
@@ -144,7 +145,6 @@ const userRouter = require('./User.routes');
 const categoryRouter = require('./Category.routes');
 const deviceRouter = require('./Device.routes');
 const orderRouter = require('./Order.routes');
-const deviceInfoRouter = require('./DeviceInfo.routes');
 const statusRouter = require('./Status.routes');
 const basketRouter = require('./Basket.routes');
 
@@ -153,7 +153,6 @@ router.use('/user', userRouter);
 router.use('/category', categoryRouter);
 router.use('/device', deviceRouter);
 router.use('/order', orderRouter);
-router.use('/deviceInfo', deviceInfoRouter);
 router.use('/statusRouter', statusRouter);
 
 module.exports = router;

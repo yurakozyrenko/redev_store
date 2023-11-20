@@ -15,7 +15,6 @@ app.use(express.json());
 
 app.use(express.static(path.resolve(__dirname, 'static')));
 app.use(fileUpload({}));
-
 app.use('/api', router);
 
 const swaggerJsDoc = require('swagger-jsdoc');
@@ -24,9 +23,10 @@ const swaggerOptions = {
     swaggerDefinition: {
         openapi: '3.0.0',
         info: {
-            title: 'Users API',
+            title: 'REDEV_STORE',
             version: '1.0.0',
-            description: 'Users API information',
+            description:
+                'Онлайн-магазин для продажи товаров с использованием API и реляционной базы данных.',
             contact: {
                 name: 'Amazing Developer',
             },
@@ -53,5 +53,4 @@ const start = async () => {
         console.log('Невозможно выполнить подключение к БД: ', e);
     }
 };
-
 start();

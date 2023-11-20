@@ -11,10 +11,6 @@ class BasketDevicesService {
 
     // добавить товар в корзину покупателя
     async addDeviceInBasket({ basketId, deviceId }) {
-        const candidate = await Device.findOne({ where: { id: deviceId } });
-        if (!candidate) {
-            throw new Error('Device was not found');
-        }
         const basket = await BasketDevice.create({ basketId, deviceId });
         return basket;
     }

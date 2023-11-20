@@ -38,8 +38,6 @@ const BasketController = require('../controllers/basketController');
  *          500:
  *              description: Some server err
  */
-
-
 // Получить корзину пользователя
 router.get('/', authMiddleware, BasketController.getOne);
 
@@ -57,7 +55,7 @@ router.get('/', authMiddleware, BasketController.getOne);
  *          name: id
  *          schema:
  *            type: integer
- *          description: Numeric id of the user to get id Device
+ *          description: id Device to get user
  *      responses:
  *          200:
  *              description: Success response

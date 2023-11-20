@@ -124,4 +124,49 @@ router.get('/', authMiddleware, OrderController.getAll);
 // Просмотреть заказ по id
 router.get('/:id', authMiddleware, OrderController.getOne);
 
+/**
+ * @swagger
+ * /api/order/{id}:
+ *  patch:
+ *      security:
+ *      - bearerAuth: []
+ *      summary: Payment user order
+ *      tags: [Orders]
+ *      description: Returns order
+ *      parameters:
+ *        - in: query
+ *          name: id
+ *          schema:
+ *            type: integer
+ *          required: true
+ *          description: Set order id of the user to get Payment
+ *      responses:
+ *          200:
+ *              description: Success response
+ *              content:
+ *                application/json:
+ *                  schema:
+ *                    type: array
+ *                    items:
+ *                      $ref: "#/components/schemas/OrderItem"
+ *          401:
+ *              description: Unauthorized Error
+ *              content:
+ *                application/json:
+ *                  schema:
+ *                    type: object
+ *                    required:
+ *                      - message
+ *                    properties:
+ *                      message:
+ *                        type: string
+ *                        example: Для работы нужен токен
+ *          404:
+ *              description: The users by age was not found
+ *          500:
+ *              description: Some server err
+ */
+// Оплатить заказ по id
+router.patch('/:id', authMiddleware, OrderController.updateOne);
+
 module.exports = router;

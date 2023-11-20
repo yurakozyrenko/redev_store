@@ -11,7 +11,6 @@ class StatusController {
                 price,
                 categoryId,
             });
-
             return res.json(status);
         } catch (e) {
             next(ApiError.badRequest(e.message));

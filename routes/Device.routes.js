@@ -1,5 +1,7 @@
 const Router = require('express');
 const router = new Router();
+const { checkSchema } = require('express-validator');
+const { nameSchema } = require('../helpers/validation');
 const DeviceController = require('../controllers/deviceController');
 
 /**
@@ -12,7 +14,7 @@ const DeviceController = require('../controllers/deviceController');
  *      tags: [Devices]
  *      requestBody:
  *          required: true
- *          description: Title for new device.
+ *          description: Add New device.
  *          content:
  *              application/json:
  *                  schema:
@@ -21,16 +23,23 @@ const DeviceController = require('../controllers/deviceController');
  *                      - name
  *                      - price
  *                      - categoryId
+ *                      - quantity
  *                    properties:
  *                      name:
  *                        type: string
  *                        example: AtlantXT-1
  *                      price:
  *                        type: integer
- *                        example: 200
+ *                        example: 100
  *                      categoryId:
  *                        type: integer
  *                        example: 1
+ *                      quantity:
+ *                        type: integer
+ *                        example: 2
+ *                      description:
+ *                        type: string
+ *                        example: Very good device
  *
  *      responses:
  *          200:
@@ -59,10 +68,10 @@ const DeviceController = require('../controllers/deviceController');
  *                          properties:
  *                            msg:
  *                              type: string
- *                              example: Title должно быть строкой
+ *                              example: name должно быть строкой
  *                            param:
  *                              type: string
- *                              example: title
+ *                              example: name
  *                            location:
  *                              type: string
  *                              example: body
@@ -82,7 +91,7 @@ const DeviceController = require('../controllers/deviceController');
  *              description: Some server err
  */
 // Добавление товара в базу данных
-router.post('/', DeviceController.create);
+router.post('/', checkSchema(nameSchema), DeviceController.create);
 
 /**
  * @swagger
@@ -108,17 +117,27 @@ router.post('/', DeviceController.create);
  *          schema:
  *            type: integer
  *          description: Поиск товаров до max price
+ *
  *        - in: query
- *          name: sortPrice
+ *          name: sort
+ *          schema:
+ *            type: string
+ *          description: Сортировка по столбцу (price, quanity)
+ *
+ *        - in: query
+ *          name: order
+ *          schema:
+ *            type: string
+ *          description: Сортировка ASC - низкая-высокая, DESC - высокая-низкая
+ *
+ *        - in: query
+ *          name: page
+ *          schema:
+ *            type: number
+ *        - in: query
+ *          name: limit
  *          schema:
  *            type: integer
- *          description: Сортировка по цене (1-возрастание, 2-убывание)
- *        - in: query
- *          name: sortDate
- *          schema:
- *            type: integer
- *          description: Сортировка по дате добавления 
- * 
  *      responses:
  *          200:
  *              description: Success response
@@ -185,7 +204,7 @@ router.get('/', DeviceController.getAll);
  *                        type: string
  *                        example: Для работы нужен токен
  *          404:
- *              description: The users by age was not found
+ *              description: The device by id was not found
  *          500:
  *              description: Some server err
  */
@@ -193,6 +212,101 @@ router.get('/', DeviceController.getAll);
 // Получить товар по id
 router.get('/:id', DeviceController.getOne);
 
+/**
+ * @swagger
+ * /api/device/{id}:
+ *  delete:
+ *      security:
+ *      - bearerAuth: []
+ *      summary: Удалить товар по id
+ *      tags: [Devices]
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          schema:
+ *            type: integer
+ *          required: true
+ *          description: Numeric id to delete device
+ *      responses:
+ *          200:
+ *              description: Success response
+ *              content:
+ *                application/json:
+ *                  schema:
+ *                    type: array
+ *                    items:
+ *                      $ref: "#/components/schemas/DeviceItem"
+ *          401:
+ *              description: Unauthorized Error
+ *              content:
+ *                application/json:
+ *                  schema:
+ *                    type: object
+ *                    required:
+ *                      - message
+ *                    properties:
+ *                      message:
+ *                        type: string
+ *                        example: Для работы нужен токен
+ *          404:
+ *              description: Device by id was not found
+ *          500:
+ *              description: Some server err
+ */
+
+// Получить товар по id
 router.delete('/:id', DeviceController.deleteOne);
+
+/**
+ * @swagger
+ * /api/device/{id}:
+ *  patch:
+ *      security:
+ *      - bearerAuth: []
+ *      summary: Обновить товар по id
+ *      tags: [Devices]
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          schema:
+ *            type: integer
+ *          required: true
+ *          description: Numeric id to update device
+ *      requestBody:
+ *          required: true
+ *          description: Update information device
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                     $ref: '#/components/schemas/DeviceItem'
+ *      responses:
+ *          200:
+ *              description: Success response
+ *              content:
+ *                application/json:
+ *                  schema:
+ *                    type: array
+ *                    items:
+ *                      $ref: "#/components/schemas/DeviceItem"
+ *          401:
+ *              description: Unauthorized Error
+ *              content:
+ *                application/json:
+ *                  schema:
+ *                    type: object
+ *                    required:
+ *                      - message
+ *                    properties:
+ *                      message:
+ *                        type: string
+ *                        example: Для работы нужен токен
+ *          404:
+ *              description: Device by id was not found
+ *          500:
+ *              description: Some server err
+ */
+
+// Обновить товар по id
+router.patch('/:id', DeviceController.updateOne);
 
 module.exports = router;
